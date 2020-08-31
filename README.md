@@ -19,10 +19,19 @@ npm install
 
 ##  Scripts to run
 
-- `build` - transpile TypeScript to ES6,
+- `build` - transpile TypeScript to ES,
 - `build:watch` - interactive watch mode to automatically transpile source files,
 - `lint` - lint source files and tests,
 
+##  How to run
+
+```sh
+`npm run-script build` - transpile TypeScript to ES
+
+`node build/src/app.js confirmation` - generate confirmation pdf document
+`node build/src/app.js invoice` - stub for futher creation other types of pdf documents
+
+```
 [ts-badge]: https://img.shields.io/badge/TypeScript-4.0-blue.svg
 [nodejs-badge]: https://img.shields.io/badge/Node.js->=%2012.13-blue.svg
 [nodejs]: https://nodejs.org/dist/latest-v12.x/docs/api/

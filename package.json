@@ -1,9 +1,15 @@
 {
   "name": "document-generator",
-  "version": "0.1.0",
   "description": "Test task to show approach how to generate several types of documents in nodejs environment using TypeScript and PDFKit library",
+  "author": "Oleksii Fomazov <oleksii@fomazov.name>",
+  "version": "0.1.0",
+  "license": "MIT",
   "engines": {
     "node": ">= 12.13 <13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:fomazov/document-generator.git"
   },
   "devDependencies": {
     "@types/pdfkit": "~0.10.6",
@@ -21,8 +27,7 @@
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx"
   },
-  "author": "Oleksii Fomazov <oleksii@fomazov.name>",
-  "license": "MIT",
+  "main": "build/src/app.js",
   "dependencies": {
     "tslib": "~2.0.1",
     "pdfkit": "^0.9.0"
