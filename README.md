@@ -32,6 +32,11 @@ npm install
 `node build/src/app.js invoice` - stub for futher creation other types of pdf documents
 
 ```
+
+##  Where I can find output documents?
+
+All generated documents stored in ./public/documents/ directory
+
 [ts-badge]: https://img.shields.io/badge/TypeScript-4.0-blue.svg
 [nodejs-badge]: https://img.shields.io/badge/Node.js->=%2012.13-blue.svg
 [nodejs]: https://nodejs.org/dist/latest-v12.x/docs/api/
