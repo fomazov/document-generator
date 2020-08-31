@@ -1,0 +1,14 @@
+{
+  "name": "Hotel Name",
+  "hotel": { "name": "Hotel Name" },
+  "booking": { "checkedInAt": "", "checkedOutAt": "" },
+  "guest": {
+    "firstName": "Sarah Meredyth",
+    "lastName": "Morgan",
+    "birthday": "",
+    "country": "United Kingdom",
+    "documentType": "Driving Licence",
+    "documentNumber": "MORGA753116SM9IJ 35",
+    "documentPhoto": ""
+  }
+}

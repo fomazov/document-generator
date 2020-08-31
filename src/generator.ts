@@ -2,9 +2,9 @@ export namespace DocumentGenerator {
   export abstract class PDFDocumentGenerator {
     public abstract factoryMethod(): PDFDocument;
 
-    public someOperation(): string {
+    public someOperation(data): string {
       const documentType = this.factoryMethod();
-      return `PDFDocumentGenerator: ${documentType.operation()}`;
+      return `PDFDocumentGenerator: ${documentType.operation(data)}`;
     }
   }
 
@@ -21,7 +21,8 @@ export namespace DocumentGenerator {
   }
 
   export class Confirmation implements PDFDocument {
-    public operation(): string {
+    public operation(data): string {
+      console.log(data.guest.firstName);
       return '{Result of the Confirmation}';
     }
   }
@@ -36,9 +37,9 @@ export namespace DocumentGenerator {
     operation(): string;
   }
 
-  export function generatePDFDocument(generator: PDFDocumentGenerator) {
+  export function generatePDFDocument(generator: PDFDocumentGenerator, data?) {
     // ...
-    console.log(generator.someOperation());
+    console.log(generator.someOperation(data));
     // ...
   }
 }

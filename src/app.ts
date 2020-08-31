@@ -1,14 +1,19 @@
 import { DocumentGenerator } from './generator';
+import data from './data.json';
+
+//const counter: string = data.hotel.name;
+//console.log(counter);
 
 const args: string[] = process.argv.slice(2);
 const arg: string = args.toString();
 
-// I use factory pattern to allow generate a few pdf document types in future
+// I use factory pattern to allow generation a few pdf document types in future
 switch (arg) {
   case 'confirmation':
     console.log('Application launched in the confirmation generator mode.');
     DocumentGenerator.generatePDFDocument(
       new DocumentGenerator.ConfirmationGenerator(),
+      data,
     );
     break;
   case 'invoice':
