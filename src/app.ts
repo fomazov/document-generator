@@ -20,6 +20,7 @@ switch (arg) {
     console.log('Application launched in the invoice generator mode.');
     DocumentGenerator.generatePDFDocument(
       new DocumentGenerator.InvoiceGenerator(),
+      data,
     );
     break;
   default:

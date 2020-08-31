@@ -1,7 +1,7 @@
 {
   "name": "Hotel Name",
   "hotel": { "name": "Hotel Name" },
-  "booking": { "checkedInAt": "", "checkedOutAt": "" },
+  "booking": { "checkedInAt": "8 Aug 20 21:22 UT", "checkedOutAt": "14 Aug 20 11:42 UT" },
   "guest": {
     "firstName": "Sarah Meredyth",
     "lastName": "Morgan",
