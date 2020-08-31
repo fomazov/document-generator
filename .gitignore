@@ -6,6 +6,9 @@ npm-debug.log*
 # Dependencies
 node_modules/
 
+# Generated documents in public
+public/documents/
+
 # Coverage
 coverage
 

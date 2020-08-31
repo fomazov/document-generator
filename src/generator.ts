@@ -59,13 +59,23 @@ export namespace DocumentGenerator {
         .moveDown();
     }
 
+    private generatePhoto({ doc, data }) {
+      doc.image(data.guest.documentPhoto, 50, 100, {
+        fit: [500, 500],
+        align: 'center',
+        valign: 'center',
+      });
+    }
+
     public release(doc?, data?): any {
-      console.log(data.guest.firstName);
+      const currentDate: Date = moment(new Date()).format('MMDDYYYYHHmmSS');
+      const documentName: string = `confirmation_${currentDate}.pdf`;
 
       this.generateHeader({ doc, data });
+      this.generatePhoto({ doc, data });
 
       doc.end();
-      doc.pipe(fs.createWriteStream('./public/documents/confirmation.pdf'));
+      doc.pipe(fs.createWriteStream('./public/documents/' + documentName));
 
       return '{Result of the Confirmation}';
     }
