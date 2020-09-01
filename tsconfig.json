@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
+    "rootDir": "./src",
+    "outDir": "build",
+    "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "importHelpers": true,
@@ -20,7 +23,5 @@
     "noImplicitThis": false,
     "strictNullChecks": false
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

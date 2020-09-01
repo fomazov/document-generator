@@ -1,11 +1,8 @@
 import { DocumentGenerator } from './generator';
 import data from './data.json';
 
-//const counter: string = data.hotel.name;
-//console.log(counter);
-
-const args: string[] = process.argv.slice(2);
-const arg: string = args.toString();
+const args = process.argv.slice(2);
+const arg = args.toString();
 
 // I use factory pattern to allow generation a few pdf document types in future
 switch (arg) {

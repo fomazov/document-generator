@@ -1,215 +1,223 @@
-export namespace DocumentGenerator {
-  const fs = require('fs');
-  const PDFDocument = require('pdfkit');
-  const moment = require('moment');
+import fs from 'fs';
+import path from 'path';
+import moment from 'moment';
+import PDFDocument from 'pdfkit';
+import { formData } from './typings';
 
-  const fontFamily: string = 'ArialUnicode';
-  const boldFontFamily: string = 'ArialUnicode-Bold';
+const fontFamily = 'ArialUnicode';
+const boldFontFamily = 'ArialUnicode-Bold';
 
-  export abstract class PDFDocumentGenerator {
-    public abstract documentType(): PDFDocument;
+type IPDFDocument = typeof PDFDocument;
 
-    public initializePDFDocument(data): string {
-      const dt = this.documentType();
+export interface PDFDocumentInterface {
+  release: (a?: IPDFDocument, b?: formData) => string | never;
+}
 
-      const doc = new PDFDocument({ size: 'A4', margin: 50 });
-      doc.registerFont(
-        'ArialUnicode',
-        require('path').resolve(
-          __dirname,
-          '../../public/assets/fonts/ArialUnicode.ttf',
-        ),
-      );
-      doc.registerFont(
-        'ArialUnicode-Bold',
-        require('path').resolve(
-          __dirname,
-          '../../public/assets/fonts/ArialUnicode-Bold.ttf',
-        ),
-      );
+export interface HrInterface {
+  doc: IPDFDocument;
+  y: number;
+  color?: string;
+  lineWidth?: number;
+  length?: number;
+}
 
-      return `PDFDocumentGenerator: ${dt.release(doc, data)}`;
-    }
+export interface HeaderInterface {
+  doc: IPDFDocument;
+  hotelName: string;
+}
+
+export interface BookingInfoInterface {
+  doc: IPDFDocument;
+  checkedInAt: string;
+  checkedOutAt: string;
+  yValue: number;
+}
+
+export interface PhotoInterface {
+  doc: IPDFDocument;
+  documentPhoto: string;
+}
+
+export function generatePDFDocument(
+  generator: PDFDocumentGenerator,
+  data?: formData,
+): void {
+  console.log(generator.initializePDFDocument(data));
+}
+
+const arialUnicode = path.resolve(
+  __dirname,
+  '../public/assets/fonts/ArialUnicode.ttf',
+);
+
+const arialUnicodeBold = path.resolve(
+  __dirname,
+  '../public/assets/fonts/ArialUnicode-Bold.ttf',
+);
+
+export abstract class PDFDocumentGenerator {
+  public abstract documentType(): PDFDocumentInterface;
+
+  public initializePDFDocument(data: formData): string {
+    const dt = this.documentType();
+
+    const doc = new PDFDocument({ size: 'A4', margin: 50 });
+    doc.registerFont('ArialUnicode', arialUnicode);
+    doc.registerFont('ArialUnicode-Bold', arialUnicodeBold);
+
+    return `PDFDocumentGenerator: ${dt.release(doc, data)}`;
+  }
+}
+
+export class ConfirmationGenerator extends PDFDocumentGenerator {
+  public documentType(): PDFDocumentInterface {
+    return new Confirmation();
+  }
+}
+
+export class InvoiceGenerator extends PDFDocumentGenerator {
+  public documentType(): PDFDocumentInterface {
+    return new Invoice();
+  }
+}
+
+export class Confirmation implements PDFDocumentInterface {
+  private generateHr({
+    doc,
+    y = 50,
+    color = '#aaaaaa',
+    lineWidth = 1,
+    length = 550,
+  }: HrInterface) {
+    doc
+      .strokeColor(color)
+      .lineWidth(lineWidth)
+      .moveTo(50, y)
+      .lineTo(length, y)
+      .stroke();
   }
 
-  export class ConfirmationGenerator extends PDFDocumentGenerator {
-    public documentType(): PDFDocument {
-      return new Confirmation();
-    }
+  private generateHeader({ doc, hotelName }: HeaderInterface) {
+    doc
+      .font(boldFontFamily, '22')
+      .fillColor('#444444')
+      .text(hotelName, 50, 57)
+      .fontSize(10)
+      .text(moment(new Date()).format('MMM DD, YYYY'), 200, 62, {
+        align: 'right',
+      })
+      .font(fontFamily, '15')
+      .text('Online check in confirmation', 50, 85)
+      .moveDown();
+
+    this.generateHr({ doc, y: 110, color: '#2a8bf2', lineWidth: 4 });
   }
 
-  export class InvoiceGenerator extends PDFDocumentGenerator {
-    public documentType(): PDFDocument {
-      return new Invoice();
-    }
+  private generateBookingInfo({
+    doc,
+    checkedInAt,
+    checkedOutAt,
+    yValue,
+  }: BookingInfoInterface) {
+    let y = yValue;
+    doc
+      .fillColor('#444444')
+      .fontSize(20)
+      .font(boldFontFamily)
+      .text('Booking information', 50, y);
+    y += 30;
+
+    this.generateHr({ doc, y });
+    y += 15;
+
+    doc
+      .fontSize(10)
+      .font(boldFontFamily)
+      .text('Check in date', 50, y)
+      .font(fontFamily)
+      .text(moment(checkedInAt).format('MMM DD, YYYY'), 150, y);
+    y += 15;
+
+    doc
+      .fontSize(10)
+      .font(boldFontFamily)
+      .text('Check out date', 50, y)
+      .font(fontFamily)
+      .text(moment(checkedOutAt).format('MMM DD, YYYY'), 150, y);
+
+    y += 15;
+    this.generateHr({ doc, y });
+    y += 50;
   }
 
-  export class Confirmation implements PDFDocument {
-    private generateHr({
-      doc,
-      y = 50,
-      color = '#aaaaaa',
-      lineWidth = 1,
-      length = 550,
-    }: HrInterface) {
-      doc
-        .strokeColor(color)
-        .lineWidth(lineWidth)
-        .moveTo(50, y)
-        .lineTo(length, y)
-        .stroke();
-    }
+  private generatePhoto({ doc, documentPhoto }: PhotoInterface) {
+    doc.image(documentPhoto, 50, 200, {
+      fit: [500, 500],
+      align: 'center',
+      valign: 'center',
+    });
+  }
 
-    private generateHeader({ doc, hotelName }: HeaderInterface) {
-      doc
-        .font(boldFontFamily, 22)
-        .fillColor('#444444')
-        .text(hotelName, 50, 57)
-        .fontSize(10)
-        .text(moment(new Date()).format('MMM DD, YYYY'), 200, 62, {
-          align: 'right',
-        })
-        .font(fontFamily, 15)
-        .text('Online check in confirmation', 50, 85)
-        .moveDown();
-
-      this.generateHr({ doc, y: 110, color: '#2a8bf2', lineWidth: 4 });
-    }
-
-    private generateBookingInfo(
-      doc,
-      checkedInAt,
-      checkedOutAt,
-      yValue,
-    ): BookingInfoInterface {
-      let y = yValue;
-      doc
-        .fillColor('#444444')
-        .fontSize(20)
-        .font(boldFontFamily)
-        .text('Booking information', 50, y);
-      y += 30;
-
-      this.generateHr({ doc, y });
-      y += 15;
-
-      doc
-        .fontSize(10)
-        .font(boldFontFamily)
-        .text('Check in date', 50, y)
-        .font(fontFamily)
-        .text(moment(checkedInAt).format('MMM DD, YYYY'), 150, y);
-      y += 15;
-
-      doc
-        .fontSize(10)
-        .font(boldFontFamily)
-        .text('Check out date', 50, y)
-        .font(fontFamily)
-        .text(moment(checkedOutAt).format('MMM DD, YYYY'), 150, y);
-
-      y += 15;
-      this.generateHr({ doc, y });
-      y += 50;
-    }
-
-    private generatePhoto({ doc, documentPhoto }: PhotoInterface) {
-      doc.image(documentPhoto, 50, 200, {
-        fit: [500, 500],
+  private generateFooter({ doc }) {
+    this.generateHr({ doc, y: 740 });
+    doc
+      .fontSize(10)
+      .text(
+        'This check-in form was generated by EasyWay Technologies LTD',
+        50,
+        760,
+        { align: 'center', width: 500 },
+      )
+      .text('https://www.easyway.ai', 50, 775, {
         align: 'center',
-        valign: 'center',
+        width: 500,
       });
-    }
-
-    private generateFooter({ doc }) {
-      this.generateHr({ doc, y: 740 });
-      doc
-        .fontSize(10)
-        .text(
-          'This check-in form was generated by EasyWay Technologies LTD',
-          50,
-          760,
-          { align: 'center', width: 500 },
-        )
-        .text('https://www.easyway.ai', 50, 775, {
-          align: 'center',
-          width: 500,
-        });
-    }
-
-    public release(doc?, data?): any {
-      const currentDate: String = moment(new Date()).format('MMDDYYYYHHmmSS');
-      const documentName: string = `confirmation_${currentDate}.pdf`;
-      const hotelName = data.hotel.namet;
-      const checkedInAt = data.booking.checkedInAt;
-      const checkedOutAt = data.booking.checkedOutAt;
-      const documentPhoto: string = data.guest.documentPhoto;
-
-      this.generateHeader({ doc, hotelName });
-      this.generatePhoto({ doc, documentPhoto });
-
-      this.generateBookingInfo(doc, checkedInAt, checkedOutAt, 160);
-
-      this.generateFooter({ doc });
-
-      doc.end();
-      doc.pipe(fs.createWriteStream('./public/documents/' + documentName));
-
-      return '{Result of the Confirmation}';
-    }
   }
 
-  export class Invoice implements PDFDocument {
-    public release(doc?, data?): any {
-      const documentName: string = 'invoice.pdf';
-      const invoiceStub: String =
-        'This is stub for futher creation other types of pdf documents';
+  public release(doc?: IPDFDocument, data?: formData): string {
+    const currentDate: string = moment(new Date()).format('MMDDYYYYHHmmSS');
+    const documentName = `confirmation_${currentDate}.pdf`;
+    const documentPath = path.resolve(
+      `${__dirname}/../public/documents/${documentName}`,
+    );
+    const hotelName = data.hotel.name;
 
-      doc
-        .font(boldFontFamily, 22)
-        .fillColor('#444444')
-        .text(invoiceStub, 50, 100);
+    const { checkedInAt, checkedOutAt } = data.booking;
+    const documentPhoto: string = data.guest.documentPhoto;
 
-      doc.end();
-      doc.pipe(fs.createWriteStream('./public/documents/' + documentName));
+    this.generateHeader({ doc, hotelName });
+    this.generatePhoto({ doc, documentPhoto });
 
-      return '{Result of the Invoice. }';
-    }
+    this.generateBookingInfo({ doc, checkedInAt, checkedOutAt, yValue: 160 });
+
+    this.generateFooter({ doc });
+
+    doc.end();
+    doc.pipe(fs.createWriteStream(documentPath));
+
+    return '{Result of the Confirmation}';
   }
+}
 
-  export interface PDFDocument {
-    release(): any;
-  }
+export class Invoice implements PDFDocumentInterface {
+  public release(doc?: IPDFDocument): string {
+    const documentName = 'invoice.pdf';
+    const invoiceStub =
+      'This is stub for futher creation other types of pdf documents';
 
-  export interface HrInterface {
-    doc: object;
-    y: number;
-    color?: string;
-    lineWidth?: number;
-    length?: number;
-  }
+    doc
+      .font(boldFontFamily, '22')
+      .fillColor('#444444')
+      .text(invoiceStub, 50, 100);
 
-  export interface HeaderInterface {
-    doc: object;
-    hotelName: string;
-  }
+    doc.end();
+    doc.pipe(fs.createWriteStream('./public/documents/' + documentName));
 
-  export interface BookingInfoInterface {
-    doc: object;
-    checkedInAt: string;
-    checkedOutAt: string;
-    yValue: number;
+    return '{Result of the Invoice. }';
   }
-
-  export interface PhotoInterface {
-    doc: any;
-    documentPhoto: string;
-  }
-
-  export function generatePDFDocument(
-    generator: PDFDocumentGenerator,
-    data?,
-  ): void {
-    console.log(generator.initializePDFDocument(data));
-  }
+}
+export class DocumentGenerator {
+  public static generatePDFDocument = generatePDFDocument;
+  public static ConfirmationGenerator = ConfirmationGenerator;
+  public static InvoiceGenerator = InvoiceGenerator;
 }

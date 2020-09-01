@@ -26,10 +26,10 @@ npm install
 ##  How to run
 
 ```sh
-`npm run-script build` - transpile TypeScript to ES
+`npm run build` - transpile TypeScript to EcmaScript
 
-`node build/src/app.js confirmation` - generate confirmation pdf document
-`node build/src/app.js invoice` - stub for futher creation other types of pdf documents
+`node build/app.js confirmation` - generate confirmation pdf document
+`node build/app.js invoice` - stub for futher creation other types of pdf documents
 
 ```
 
