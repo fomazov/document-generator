@@ -9,7 +9,6 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "importHelpers": true,
-    "jsx": "react",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "alwaysStrict": true,

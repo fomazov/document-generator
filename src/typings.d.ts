@@ -1,3 +1,7 @@
+import PDFDocument from 'pdfkit';
+
+export type PDFDocument = typeof PDFDocument;
+
 export type Hotel = {
   name: string;
 };
@@ -24,6 +28,6 @@ export type formData = {
 };
 
 declare module '*.json' {
-  const value: formData;
+  export const value: formData;
   export default value;
 }
