@@ -118,7 +118,7 @@ class Confirmation implements v.General {
 
     y += 15;
     Confirmation.generateHr({ doc, y });
-    //y += 50;
+
   }
 
   private static generatePhoto({ doc, documentPhoto }: v.DocumentPhoto) {
@@ -151,8 +151,8 @@ class Confirmation implements v.General {
     const documentPhoto = data.guest.documentPhoto;
 
     Confirmation.generateHeader({ doc, hotelName });
-    Confirmation.generatePhoto({ doc, documentPhoto });
     Confirmation.generateBookingInfo({ doc, checkedInAt, checkedOutAt, yValue: 160 });
+    Confirmation.generatePhoto({ doc, documentPhoto });
     Confirmation.generateFooter({ doc });
 
     doc.end();
@@ -165,11 +165,10 @@ class Confirmation implements v.General {
 class Invoice implements v.General {
   public release(doc?: PDFDocument): string {
     const documentName = 'invoice.pdf';
-    const invoiceStub =
-      'This is stub for futher creation other types of pdf documents';
+    const invoiceStub = 'This is stub for futher creation other types of pdf documents';
 
     doc
-      .font(boldFontFamilyName, '22')
+      .font(boldFontFamilyName, null, 22)
       .fillColor('#444444')
       .text(invoiceStub, 50, 100);
 
