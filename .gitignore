@@ -7,7 +7,7 @@ npm-debug.log*
 node_modules/
 
 # Generated documents in public
-public/documents/
+# public/documents/
 
 # Coverage
 coverage

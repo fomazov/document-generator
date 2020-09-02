@@ -28,3 +28,9 @@ export interface DocumentPhoto {
   doc: PDFDocument;
   documentPhoto: string;
 }
+
+export interface writeToFile {
+  file: string;
+  directoryPath: string;
+  finalMsg: string;
+}
